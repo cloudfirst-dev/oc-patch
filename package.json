@@ -1,0 +1,16 @@
+{
+  "name": "outside-cli",
+  "version": "1.0.0",
+  "license": "MIT",
+  "bin": {
+    "outside": "bin/outside"
+  },
+  "scripts": {},
+  "devDependencies": {},
+  "dependencies": {
+    "js-yaml": "^3.13.1",
+    "minimist": "^1.2.0",
+    "openshift-rest-client": "^2.2.0",
+    "tmp": "^0.1.0"
+  }
+}

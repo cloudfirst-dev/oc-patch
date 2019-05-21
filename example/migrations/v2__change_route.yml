@@ -1,0 +1,17 @@
+rollForward:
+- action: delete
+  spec:
+    apiVersion: v1
+    kind: Route
+    metadata:
+      name: frontend
+- action: create
+  spec:
+    apiVersion: v1
+    kind: Route
+    metadata:
+      name: frontend-new
+    spec:
+      to:
+        kind: Service
+        name: frontend
