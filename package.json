@@ -9,6 +9,7 @@
   "devDependencies": {},
   "dependencies": {
     "js-yaml": "^3.13.1",
+    "maven-deploy": "^1.5.0",
     "minimist": "^1.2.0",
     "openshift-rest-client": "^2.2.0",
     "tmp": "^0.1.0"
