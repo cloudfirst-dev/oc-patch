@@ -20,20 +20,21 @@ podTemplate(
   ]
 ) {
   node('nodejs-pod') {
-  stage('install pkg prereq') {
-    sh 'npm install -g pkg'
-  }
-  
-  // Checkout Source Code.
-  stage('Checkout Source') {
-    checkout scm
-  }
+    stage('install pkg prereq') {
+      sh 'npm install -g pkg'
+    }
+    
+    // Checkout Source Code.
+    stage('Checkout Source') {
+      checkout scm
+    }
 
-  stage('build binary') {
-    sh 'pkg index.js --out-path ./bin/'
-  }
+    stage('build binary') {
+      sh 'pkg index.js --out-path ./bin/'
+    }
 
-  stage('deploy') {
-    sh 'node deploy.js'
+    stage('deploy') {
+      sh 'node deploy.js'
+    }
   }
 }
