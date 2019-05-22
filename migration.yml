@@ -1,7 +1,0 @@
-apiVersion: "openshift.cloudfirst.dev/v1" 
-kind: migration 
-metadata:
-  name: my-new-migration 
-spec: 
-  currentVersion: "0"
-  lastRun: "today"
