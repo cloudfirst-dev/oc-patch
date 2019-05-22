@@ -132,6 +132,7 @@ rollBack:
       name: frontend
 - action: delete
   spec:
+    apiVersion: v1
     kind: Route
     metadata:
       name: frontend
@@ -151,11 +152,5 @@ rollBack:
   spec:
     apiVersion: v1
     kind: Service
-    metadata:
-      name: frontend
-- action: delete
-  spec:
-    apiVersion: v1
-    kind: Route
     metadata:
       name: frontend

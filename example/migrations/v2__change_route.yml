@@ -15,3 +15,20 @@ rollForward:
       to:
         kind: Service
         name: frontend
+rollBack:
+- action: delete
+  spec:
+    apiVersion: v1
+    kind: Route
+    metadata:
+      name: frontend-new
+- action: create
+  spec:
+    apiVersion: v1
+    kind: Route
+    metadata:
+      name: frontend
+    spec:
+      to:
+        kind: Service
+        name: frontend

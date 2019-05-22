@@ -18,6 +18,10 @@ module.exports = () => {
       require('./cmds/apply')(args)
       break
 
+    case 'rollback':
+      require('./cmds/rollback')(args)
+      break
+
     case 'version':
       require('./cmds/version')(args)
       break
