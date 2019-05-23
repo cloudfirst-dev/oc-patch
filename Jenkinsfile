@@ -1,15 +1,11 @@
 podTemplate(
-  label: "nodejs-pod",
+  label: "maven-pod",
   cloud: "openshift",
-  inheritFrom: "nodejs",
+  inheritFrom: "maven",
   containers: [
     containerTemplate(
       name: "jnlp",
-      image: "registry.redhat.io/openshift3/jenkins-agent-nodejs-8-rhel7:v3.11",
-      resourceRequestMemory: "4Gi",
-      resourceLimitMemory: "4Gi",
-      resourceRequestCpu: "100m",
-      resourceLimitCpu: "2"
+      image: "registry.redhat.io/openshift3/jenkins-agent-maven-35-rhel7:v3.11",
     )
   ],
   volumes: [
@@ -19,9 +15,10 @@ podTemplate(
     )
   ]
 ) {
-  node('nodejs-pod') {
+  node('nodejs') {
     stage('install pkg prereq') {
       sh 'npm install -g pkg'
+      sh 'npm install'
     }
     
     // Checkout Source Code.
@@ -31,10 +28,21 @@ podTemplate(
 
     stage('build binary') {
       sh 'pkg index.js --out-path ./bin/'
+      sh 'ls'
+      sh 'ls bin'
+      stash name: 'binary', includes: 'bin/*'
     }
+  }
 
+  node('maven-pod') {
+    def mvnCmd = "mvn -Dsettings.security=/home/jenkins/mvn-settings/settings-security.xml -s /home/jenkins/mvn-settings/settings.xml"
+	  
     stage('deploy') {
-      sh 'node deploy.js'
+      unstash 'binary'
+      sh "ls"
+      sh "${mvnCmd} -B deploy:deploy-file -Dpackaging=exec -Dfile=bin/index-linux -DgroupId=dev.cloudfirst.openshift -DartifactId=ocpatch-linux -Dversion=1.0.0-SNAPSHOT -DgeneratePom=true -DrepositoryId=nexus-ci.apps.idsysapps.com -Durl=http://nexus:8081/repository/cloudfirst-snapshot/"
+      sh "${mvnCmd} -B deploy:deploy-file -Dpackaging=exec -Dfile=bin/index-macos -DgroupId=dev.cloudfirst.openshift -DartifactId=ocpatch-macos -Dversion=1.0.0-SNAPSHOT -DgeneratePom=true -DrepositoryId=nexus-ci.apps.idsysapps.com -Durl=http://nexus:8081/repository/cloudfirst-snapshot/"
+      sh "${mvnCmd} -B deploy:deploy-file -Dpackaging=exe -Dfile=bin/index-win -DgroupId=dev.cloudfirst.openshift -DartifactId=ocpatch-win.exe -Dversion=1.0.0-SNAPSHOT -DgeneratePom=true -DrepositoryId=nexus-ci.apps.idsysapps.com -Durl=http://nexus:8081/repository/cloudfirst-snapshot/"
     }
   }
 }
