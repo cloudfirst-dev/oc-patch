@@ -16,20 +16,18 @@ podTemplate(
   ]
 ) {
   node('nodejs') {
-    stage('install pkg prereq') {
-      sh 'npm install -g pkg'
-      sh 'npm install'
-    }
-    
     // Checkout Source Code.
     stage('Checkout Source') {
       checkout scm
     }
+    
+    stage('install pkg prereq') {
+      sh 'npm install -g pkg'
+      sh 'npm install'
+    }
 
     stage('build binary') {
       sh 'pkg index.js --out-path ./bin/'
-      sh 'ls'
-      sh 'ls bin'
       stash name: 'binary', includes: 'bin/*'
     }
   }
@@ -39,7 +37,6 @@ podTemplate(
 	  
     stage('deploy') {
       unstash 'binary'
-      sh "ls"
       sh "${mvnCmd} -B deploy:deploy-file -Dpackaging=exec -Dfile=bin/index-linux -DgroupId=dev.cloudfirst.openshift -DartifactId=ocpatch-linux -Dversion=1.0.0-SNAPSHOT -DgeneratePom=true -DrepositoryId=nexus-ci.apps.idsysapps.com -Durl=http://nexus:8081/repository/cloudfirst-snapshot/"
       sh "${mvnCmd} -B deploy:deploy-file -Dpackaging=exec -Dfile=bin/index-macos -DgroupId=dev.cloudfirst.openshift -DartifactId=ocpatch-macos -Dversion=1.0.0-SNAPSHOT -DgeneratePom=true -DrepositoryId=nexus-ci.apps.idsysapps.com -Durl=http://nexus:8081/repository/cloudfirst-snapshot/"
       sh "${mvnCmd} -B deploy:deploy-file -Dpackaging=exe -Dfile=bin/index-win.exe -DgroupId=dev.cloudfirst.openshift -DartifactId=ocpatch-win -Dversion=1.0.0-SNAPSHOT -DgeneratePom=true -DrepositoryId=nexus-ci.apps.idsysapps.com -Durl=http://nexus:8081/repository/cloudfirst-snapshot/"

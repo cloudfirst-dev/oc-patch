@@ -1,33 +1,31 @@
 const minimist = require('minimist')
 
-module.exports = () => {
-  const args = minimist(process.argv.slice(2))
-  
-  let cmd = args._[0] || 'help'
+const args = minimist(process.argv.slice(2))
 
-  if (args.version || args.v) {
-    cmd = 'version'
-  }
+let cmd = args._[0] || 'help'
 
-  if (args.help || args.h) {
-    cmd = 'help'
-  }
+if (args.version || args.v) {
+  cmd = 'version'
+}
 
-  switch (cmd) {
-    case 'apply':
-      require('./cmds/apply')(args)
-      break
+if (args.help || args.h) {
+  cmd = 'help'
+}
 
-    case 'version':
-      require('./cmds/version')(args)
-      break
+switch (cmd) {
+  case 'apply':
+    require('./cmds/apply')(args)
+    break
 
-    case 'help':
-      require('./cmds/help')(args)
-      break
+  case 'version':
+    require('./cmds/version')(args)
+    break
 
-    default:
-      console.error(`"${cmd}" is not a valid command!`)
-      break
-  }
+  case 'help':
+    require('./cmds/help')(args)
+    break
+
+  default:
+    console.error(`"${cmd}" is not a valid command!`)
+    break
 }
